@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Google Icon Font Import -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Materialize CSS Import -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- local css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', _scheme='https', _external=True) }}"
+        type="text/css">
+
+    <!-- Add Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico', _scheme='https', _external=True) }}">
+
+    <title>WYSPA</title>
+</head>
+
+{% if GMAPS_API %}
+
+<body>
+
+    {%else%}
+
+    <body id="staticMap">
+        {%endif%}
+
+        <!-- Primary Header -->
+        <header>
+            <nav class="transparent-banner">
+                <div class="nav-wrapper">
+
+                    <a href="#" data-target="mobile-sidenav" class="sidenav-trigger"><i
+                            class="material-icons">gps_fixed</i></a>
+                    <ul id="nav-mobile" class="left hide-on-med-and-down">
+                       <li {% if active_page == "index" %} class="active" {% endif %}><a tabindex="-1"
+                        href="{{ url_for('index') }}">Home</a></li>
+
+                        {%if current_user.is_authenticated %}
+                        <li {% if active_page == "admin" %} class="active" {% endif %}><a tabindex="-1"
+                                href="{{ url_for('admin') }}">Admin</a></li>
+                        {% endif %}
+
+                        {%if current_user.is_authenticated %}
+
+                        <li><a tabindex="-1" href="{{ url_for('logout') }}">Logout</a></li>
+
+                        {% else %}
+
+                        <li><a tabindex="-1" href="#loginModal" class="modal-trigger sidenav-close">Login</a></li>
+                        <li><a tabindex="-1" href="#registerModal" class="modal-trigger sidenav-close">Register</a></li>
+
+                        {% endif %}
+
+                    </ul>
+
+                    <a href="{{ url_for('index') }}" class="brand-logo center heading-font">WYSPA</a>
+
+
+                    <a href="#helpModal" class="modal-trigger">
+                        <i class="medium material-icons help-trigger button-glow white-text right tooltipped"
+                            data-position="left" data-tooltip="Need help?">help_outline</i>
+                    </a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Sidenav Header -->
+        <section>
+            <ul class="sidenav" id="mobile-sidenav">
+                <li {% if active_page == "index" %} class="active" {% endif %}><a tabindex="-1"
+                        href="{{ url_for('index') }}">Home</a></li>
+
+                {%if current_user.is_authenticated %}
+                        <li {% if active_page == "admin" %} class="active" {% endif %}><a tabindex="-1"
+                                href="{{ url_for('admin') }}">Admin</a></li>
+                {% endif %}
+
+                {%if current_user.is_authenticated %}
+
+                <li><a tabindex="-1" href="{{ url_for('logout') }}">Logout</a></li>
+
+                {% else %}
+
+                <li><a tabindex="-1" href="#loginModal" class="modal-trigger sidenav-close">Login</a></li>
+                <li><a tabindex="-1" href="#registerModal" class="modal-trigger sidenav-close">Register</a></li>
+
+                {% endif %}
+            </ul>
+
+        </section>
+
+        <!-- Main Block Content -->
+        <main>
+            {% block content %}
+            {%endblock%}
+        </main>
+
+
+
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content center">
+                <h4>Login</h4>
+
+                <div class="row">
+                    <form class="col s12" method="POST" action="{{url_for('login')}}">
+                        <div class="row">
+                            <div class="input-field login-field col s12">
+                                <i class="material-icons prefix">group</i>
+                                <input id="usernameLogin" name="usernameLogin" type="text" class="validate" required>
+                                <label for="usernameLogin">Username</label>
+                            </div>
+                            <div class="input-field login-field col s12">
+                                <i class="material-icons prefix">lock</i>
+                                <input id="passwordLogin" name="passwordLogin" type="password" class="validate"
+                                    required>
+                                <label for="passwordLogin">Password</label>
+                            </div>
+                        </div>
+                        <div class="row footer-modal">
+                            <button class="btn login-button waves-effect waves-light" type="submit" name="action">Log In
+                                <i class="material-icons right">check_circle</i>
+                            </button>
+                            <button class="btn login-button modal-close waves-effect waves-light" type="button">Close<i
+                                    class="material-icons right">cancel</i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content center">
+                <h4>Register</h4>
+                <div class="row">
+                    <!-- Error Container -->
+                    <div class="error-message"></div>
+                    <!-- Register Form -->
+                    <form class="col s12 user-registration" method="POST" action="{{url_for('register')}}">
+                        <div class="row no-margin">
+                            <!-- Username -->
+                            <div class="input-field login-field col s12">
+                                <i class="material-icons prefix">group</i>
+                                <input id="usernameRegister" name="usernameRegister" type="text" class="validate"
+                                    required>
+                                <label for="usernameRegister">Username</label>
+                            </div>
+                            <!-- Password -->
+                            <div class="input-field login-field col s12">
+                                <i class="material-icons prefix">lock</i>
+                                <input id="passwordRegister" name="passwordRegister" type="password" class="validate"
+                                    pattern="^(?=.*[^a-zA-Z]).{6,20}$" required>
+                                <label for="passwordRegister">Password</label>
+                            </div>
+                            <!-- Confirm Password -->
+                            <div class="input-field login-field col s12">
+                                <i class="material-icons prefix">lock_open</i>
+                                <input id="passwordConfirm" name="passwordConfirm" type="password" required>
+                                <label for="passwordConfirm">Confirm Password</label>
+                            </div>
+                        </div>
+                        <div class="row footer-modal">
+                            <button class="btn login-button waves-effect waves-light" type="submit"
+                                name="action">Register
+                                <i class="material-icons right">check_circle</i>
+                            </button>
+                            <button class="btn login-button modal-close waves-effect waves-light" type="button">Close<i
+                                    class="material-icons right">cancel</i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Materialize JS Import -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <!-- Javascript Initialisation Import -->
+        <script src="{{ url_for('static', filename='js/init.js', _scheme='https', _external=True) }}"> </script>
+
+        <!-- Javascript custom Toast Script Import -->
+        <script src="{{ url_for('static', filename='js/toasts.js', _scheme='https', _external=True) }}"> </script>
+
+        <!-- Javascript custom Validation Script Import -->
+        <script src="{{ url_for('static', filename='js/validate.js', _scheme='https', _external=True) }}"> </script>
+
+        <!-- https://stackoverflow.com/questions/15321431/how-to-pass-a-list-from-python-by-jinja2-to-javascript -->
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <script>
+            displayToast({{ messages | tojson | safe }})
+        </script>
+        {%endif%}
+        {%endwith%}
+
+        {% block scripts %}
+        {% endblock %}
+
+    </body>
+
+</html>
