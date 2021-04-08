@@ -8,7 +8,7 @@ if os.path.exists("env.py"):
 
 import re
 from flask import render_template, request, redirect, flash, url_for
-
+from bson.objectid import ObjectId
 
 # Instantiate Mongo Database
 mongo = PyMongo()
@@ -67,7 +67,19 @@ def admin():
 
 @ app.route('/select')
 def select():
-    return render_template("select.html")
+
+    # Obtain Prize List
+    prizes = list(mongo.db.prizes.find())
+
+    # Obtain Ticket Data
+    ticket_data = list(mongo.db.tickets.find())
+
+    # Obtain Winner List
+    winner_data = list(mongo.db.winners.find())
+    print(winner_data)
+
+    return render_template("select.html", prizes=prizes,
+                           ticket_data=ticket_data, winner_data=winner_data)
 
 
 @app.route('/insert_prize', methods=["GET", "POST"])
@@ -84,6 +96,24 @@ def insert_ticket():
     for i in range(int(ticket_number)):
         mongo.db.tickets.insert_one({"Name": ticket_name})
     return redirect(url_for("admin"))
+
+
+@app.route('/select_winner', methods=["GET", "POST"])
+def select_winner():
+
+    prize = list(mongo.db.prizes.aggregate(
+            [{"$sample": {"size": 1}}]))
+
+    ticket = list(mongo.db.tickets.aggregate(
+            [{"$sample": {"size": 1}}]))
+
+    mongo.db.winners.insert_one({"Name": ticket[0]["Name"],
+                                 "Prize": prize[0]["prize"]})
+
+    mongo.db.prizes.remove({"_id": ObjectId(prize[0]["_id"])})
+    mongo.db.tickets.remove({"_id": ObjectId(ticket[0]["_id"])})
+
+    return redirect(url_for("select"))
 
 
 if __name__ == "__main__":

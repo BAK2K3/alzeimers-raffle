@@ -17,7 +17,7 @@
                 <form class="col s12" method="POST" action="{{url_for('insert_prize')}}">
                     <div class="row">
                         <div class="input-field col s12">
-                        <i class="material-icons prefix">account_circle</i>
+                        <i class="material-icons prefix">hot_tub</i>
                             <input id="prizeinput" name = "prizeinput" type="text" class="validate">
                                 <label for="prizeinput">Prize</label>
                         </div>
@@ -43,12 +43,12 @@
                 <form class="col s12" method="POST" action="{{url_for('insert_ticket')}}">
                   <div class="row">
                       <div class="input-field col s6">
-                      <i class="material-icons prefix">mode_edit</i>
+                      <i class="material-icons prefix">perm_identity</i>
                       <input id="ticketname" name="ticketname" type="text" class="validate"></input>
                       <label for="ticketname">Name on Ticket</label>
                       </div>
                       <div class="input-field col s6">
-                      <i class="material-icons prefix">mode_edit</i>
+                      <i class="material-icons prefix">attach_money</i>
                       <input id="ticketnumber" name="ticketnumber" type="number" class="validate"></input>
                       <label for="ticketnumber">Number of Tickets</label>
                       </div>
@@ -80,9 +80,6 @@
             {%endif%}
           </ul>
 
-
-
-
         </div>
 
       </div>
@@ -103,7 +100,6 @@
             {%endfor%}
 
           </ul>
-
         </div>
       </div>
     </div>

@@ -17,12 +17,12 @@
                 <form class="col s12">
                   <div class="row">
                       <div class="col s6">
-                      <i class="material-icons prefix">mode_edit</i>
-                      <span><strong>Total Prizes:</strong></span>
+                      <i class="material-icons prefix">monetization_on</i>
+                      <span><strong>Total Prizes:</strong> {{ prizes | length }}</span>
                       </div>
                      <div class="col s6">
-                      <i class="material-icons prefix">mode_edit</i>
-                      <span><strong>Total Tickets:</strong></span>
+                      <i class="material-icons prefix">inbox</i>
+                      <span><strong>Total Tickets:</strong> {{ticket_data | length }}</span>
                       </div>
                       </div>
                   </div>
@@ -44,8 +44,8 @@
         </div>
         <div class="card-action">
             <div class="row">
-                <form class="col s12" >
-                  <div class="row"><button class="waves-effect waves-light btn">Select a Winner!</button></div>
+                <form class="col s12" method="POST" action="{{url_for('select_winner')}}" >
+                  <div class="row"><button class="waves-effect waves-light btn">Select a Winner! <i class="material-icons">insert_emoticon</i></button></div>
                 </form>
             </div>
         </div>
@@ -64,9 +64,22 @@
         </div>
         <div class="card-action">
             <div class="row">
-                
-                <span><strong>Name</strong></span> - <span><strong>Prize</strong></span>
-                  
+                <table class="centered striped highlight">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Prize</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for winner in winner_data %}
+                    <tr>
+                      <td>{{winner.Name}}</td>
+                      <td>{{winner.Prize}}</td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>
             </div>
         </div>
       </div>
