@@ -2,62 +2,113 @@
 
 {% block content %}
 
-<section class="container"> 
+<section class="container center"> 
 
     {# Add Prizes #}
   <div class="row">
-    <div class="col s12 m4">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
+    <div class="col s6">
+      <div class="card darken-1">
+        <div class="card-content">
           <span class="card-title">Add Prize</span>
           <p>Add the name of the prize below:</p>
         </div>
         <div class="card-action">
             <div class="row">
-                <form class="col s12">
+                <form class="col s12" method="POST" action="{{url_for('insert_prize')}}">
                     <div class="row">
-                        <div class="input-field col s6">
+                        <div class="input-field col s12">
                         <i class="material-icons prefix">account_circle</i>
-                            <input id="icon_prefix" type="text" class="validate">
-                                <label for="icon_prefix">Prize</label>
+                            <input id="prizeinput" name = "prizeinput" type="text" class="validate">
+                                <label for="prizeinput">Prize</label>
                         </div>
-                        <a class="waves-effect waves-light btn">Save</a>
                     </div>
+                    <div class="row"><button class="waves-effect waves-light btn">Save</button></div>
                 </form>
             </div>
         </div>
       </div>
     </div>
-  </div>
+
 
     {# Add Tickets #}
-  <div class="row">
-    <div class="col s12 m4">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title">Add Prize</span>
+
+    <div class="col s6">
+      <div class="card darken-1">
+        <div class="card-content">
+          <span class="card-title">Add Ticket</span>
           <p>Add the name of the prize below:</p>
         </div>
         <div class="card-action">
-
             <div class="row">
-                <form class="col s12">
-                <div class="row">
-                    <div class="input-field col s6">
-                    <i class="material-icons prefix">mode_edit</i>
-                    <input id="icon_prefix2" class="materialize-textarea"></textarea>
-                    <label for="icon_prefix2">Name on Ticket</label>
-                    </div>
-                </div>
+                <form class="col s12" method="POST" action="{{url_for('insert_ticket')}}">
+                  <div class="row">
+                      <div class="input-field col s6">
+                      <i class="material-icons prefix">mode_edit</i>
+                      <input id="ticketname" name="ticketname" type="text" class="validate"></input>
+                      <label for="ticketname">Name on Ticket</label>
+                      </div>
+                      <div class="input-field col s6">
+                      <i class="material-icons prefix">mode_edit</i>
+                      <input id="ticketnumber" name="ticketnumber" type="number" class="validate"></input>
+                      <label for="ticketnumber">Number of Tickets</label>
+                      </div>
+                  </div>
+                  <div class="row"><button class="waves-effect waves-light btn">Save</button></div>
                 </form>
             </div>
-        
-        
         </div>
       </div>
     </div>
   </div>
 
-</container>
+</section>
+
+<section class="container center"> 
+
+    {# All prizes #}
+  <div class="row">
+    <div class="col s6">
+      <div class="card darken-1">
+        <div class="card-content">
+          <span class="card-title">Total Prizes: {{prizes | length}}</span>
+
+          <ul>
+            {% if prizes %}
+            {% for prize in prizes %}
+            <li>{{prize.prize}}</li>
+            {%endfor%}
+            {%endif%}
+          </ul>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+
+    {# All tickets #}
+
+    <div class="col s6">
+      <div class="card darken-1">
+        <div class="card-content">
+          <span class="card-title">Total Tickets: {{total_tickets}}</span>
+ 
+            <ul>
+
+            {% for key, value in tickets_dictionary.items() %}
+            <li><strong>{{key}}</strong>: {{value}}</li>
+            {%endfor%}
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
 
 {% endblock %}
